@@ -26,7 +26,7 @@ void testBeam(){
     double width = 0.02;
     double length = 0.5;
     double epsilon = 0.002;
-    int numofElem = 11;
+    int numofElem = 51;
 
     vector<double> locHead{0,0.05};
     vector<double> velHead{0,0};

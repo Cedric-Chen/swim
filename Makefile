@@ -32,6 +32,10 @@ test: ${TEST_OBJS}
 ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp 
 	${CC} ${CPPSETTINGS} ${INCLUDES} ${CCFLAGS} -c -o $@ $<
 
+
 clean:
 	rm -f *.o
 	rm -f *.s rm -f test
+
+tidy: clean
+	rm -f *.vti rm -f FFTW_report.txt

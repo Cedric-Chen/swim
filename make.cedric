@@ -5,9 +5,9 @@ CPPSETTINGS = -std=c++11
 CCFLAGS= -O3 -fopenmp -fstrict-aliasing -fdiagnostics-show-option -Wall -Wno-reorder 
 LDFLAGS= -O3
 
-VTKVERSION=7.1
-VTK_INC_DIR = /usr/include/
-VTK_LIB_DIR = /usr/lib/
+VTKVERSION=8.1
+VTK_INC_DIR = /usr/include/vtk-8.1
+VTK_LIB_DIR = /usr/lib/vtk-8.1
 
 FFTW_INC_DIR = /usr/include/
 FFTW_LIB_DIR = /usr/lib/x86-64-linux-gnu/
@@ -29,179 +29,178 @@ LIBS= -lstdc++ \
 	-lfftw3f_threads \
 	-L$(VTK_LIB_DIR) \
 	-lvtkChartsCore-$(VTKVERSION) \
-	-lvtkChartsCorePython27D-$(VTKVERSION) \
+	-lvtkChartsCorePython35D-$(VTKVERSION) \
 	-lvtkCommonColor-$(VTKVERSION) \
-	-lvtkCommonColorPython27D-$(VTKVERSION) \
+	-lvtkCommonColorPython35D-$(VTKVERSION) \
 	-lvtkCommonComputationalGeometry-$(VTKVERSION) \
-	-lvtkCommonComputationalGeometryPython27D-$(VTKVERSION) \
+	-lvtkCommonComputationalGeometryPython35D-$(VTKVERSION) \
 	-lvtkCommonCore-$(VTKVERSION) \
-	-lvtkCommonCorePython27D-$(VTKVERSION) \
+	-lvtkCommonCorePython35D-$(VTKVERSION) \
 	-lvtkCommonDataModel-$(VTKVERSION) \
-	-lvtkCommonDataModelPython27D-$(VTKVERSION) \
+	-lvtkCommonDataModelPython35D-$(VTKVERSION) \
 	-lvtkCommonExecutionModel-$(VTKVERSION) \
-	-lvtkCommonExecutionModelPython27D-$(VTKVERSION) \
+	-lvtkCommonExecutionModelPython35D-$(VTKVERSION) \
 	-lvtkCommonMath-$(VTKVERSION) \
-	-lvtkCommonMathPython27D-$(VTKVERSION) \
+	-lvtkCommonMathPython35D-$(VTKVERSION) \
 	-lvtkCommonMisc-$(VTKVERSION) \
-	-lvtkCommonMiscPython27D-$(VTKVERSION) \
+	-lvtkCommonMiscPython35D-$(VTKVERSION) \
 	-lvtkCommonSystem-$(VTKVERSION) \
-	-lvtkCommonSystemPython27D-$(VTKVERSION) \
+	-lvtkCommonSystemPython35D-$(VTKVERSION) \
 	-lvtkCommonTransforms-$(VTKVERSION) \
-	-lvtkCommonTransformsPython27D-$(VTKVERSION) \
+	-lvtkCommonTransformsPython35D-$(VTKVERSION) \
 	-lvtkDICOMParser-$(VTKVERSION) \
 	-lvtkDomainsChemistry-$(VTKVERSION) \
 	-lvtkDomainsChemistryOpenGL2-$(VTKVERSION) \
-	-lvtkDomainsChemistryOpenGL2Python27D-$(VTKVERSION) \
-	-lvtkDomainsChemistryPython27D-$(VTKVERSION) \
+	-lvtkDomainsChemistryOpenGL2Python35D-$(VTKVERSION) \
+	-lvtkDomainsChemistryPython35D-$(VTKVERSION) \
 	-lvtkFiltersAMR-$(VTKVERSION) \
-	-lvtkFiltersAMRPython27D-$(VTKVERSION) \
+	-lvtkFiltersAMRPython35D-$(VTKVERSION) \
 	-lvtkFiltersCore-$(VTKVERSION) \
-	-lvtkFiltersCorePython27D-$(VTKVERSION) \
+	-lvtkFiltersCorePython35D-$(VTKVERSION) \
 	-lvtkFiltersExtraction-$(VTKVERSION) \
-	-lvtkFiltersExtractionPython27D-$(VTKVERSION) \
+	-lvtkFiltersExtractionPython35D-$(VTKVERSION) \
 	-lvtkFiltersFlowPaths-$(VTKVERSION) \
-	-lvtkFiltersFlowPathsPython27D-$(VTKVERSION) \
+	-lvtkFiltersFlowPathsPython35D-$(VTKVERSION) \
 	-lvtkFiltersGeneral-$(VTKVERSION) \
-	-lvtkFiltersGeneralPython27D-$(VTKVERSION) \
+	-lvtkFiltersGeneralPython35D-$(VTKVERSION) \
 	-lvtkFiltersGeneric-$(VTKVERSION) \
-	-lvtkFiltersGenericPython27D-$(VTKVERSION) \
+	-lvtkFiltersGenericPython35D-$(VTKVERSION) \
 	-lvtkFiltersGeometry-$(VTKVERSION) \
-	-lvtkFiltersGeometryPython27D-$(VTKVERSION) \
+	-lvtkFiltersGeometryPython35D-$(VTKVERSION) \
 	-lvtkFiltersHybrid-$(VTKVERSION) \
-	-lvtkFiltersHybridPython27D-$(VTKVERSION) \
+	-lvtkFiltersHybridPython35D-$(VTKVERSION) \
 	-lvtkFiltersHyperTree-$(VTKVERSION) \
-	-lvtkFiltersHyperTreePython27D-$(VTKVERSION) \
+	-lvtkFiltersHyperTreePython35D-$(VTKVERSION) \
 	-lvtkFiltersImaging-$(VTKVERSION) \
-	-lvtkFiltersImagingPython27D-$(VTKVERSION) \
+	-lvtkFiltersImagingPython35D-$(VTKVERSION) \
 	-lvtkFiltersModeling-$(VTKVERSION) \
-	-lvtkFiltersModelingPython27D-$(VTKVERSION) \
+	-lvtkFiltersModelingPython35D-$(VTKVERSION) \
 	-lvtkFiltersParallel-$(VTKVERSION) \
 	-lvtkFiltersParallelImaging-$(VTKVERSION) \
-	-lvtkFiltersParallelImagingPython27D-$(VTKVERSION) \
-	-lvtkFiltersParallelPython27D-$(VTKVERSION) \
+	-lvtkFiltersParallelImagingPython35D-$(VTKVERSION) \
+	-lvtkFiltersParallelPython35D-$(VTKVERSION) \
 	-lvtkFiltersProgrammable-$(VTKVERSION) \
-	-lvtkFiltersProgrammablePython27D-$(VTKVERSION) \
+	-lvtkFiltersProgrammablePython35D-$(VTKVERSION) \
 	-lvtkFiltersPython-$(VTKVERSION) \
-	-lvtkFiltersPythonPython27D-$(VTKVERSION) \
+	-lvtkFiltersPythonPython35D-$(VTKVERSION) \
 	-lvtkFiltersSMP-$(VTKVERSION) \
-	-lvtkFiltersSMPPython27D-$(VTKVERSION) \
+	-lvtkFiltersSMPPython35D-$(VTKVERSION) \
 	-lvtkFiltersSelection-$(VTKVERSION) \
-	-lvtkFiltersSelectionPython27D-$(VTKVERSION) \
+	-lvtkFiltersSelectionPython35D-$(VTKVERSION) \
 	-lvtkFiltersSources-$(VTKVERSION) \
-	-lvtkFiltersSourcesPython27D-$(VTKVERSION) \
+	-lvtkFiltersSourcesPython35D-$(VTKVERSION) \
 	-lvtkFiltersStatistics-$(VTKVERSION) \
-	-lvtkFiltersStatisticsPython27D-$(VTKVERSION) \
+	-lvtkFiltersStatisticsPython35D-$(VTKVERSION) \
 	-lvtkFiltersTexture-$(VTKVERSION) \
-	-lvtkFiltersTexturePython27D-$(VTKVERSION) \
+	-lvtkFiltersTexturePython35D-$(VTKVERSION) \
 	-lvtkFiltersVerdict-$(VTKVERSION) \
-	-lvtkFiltersVerdictPython27D-$(VTKVERSION) \
+	-lvtkFiltersVerdictPython35D-$(VTKVERSION) \
 	-lvtkGeovisCore-$(VTKVERSION) \
-	-lvtkGeovisCorePython27D-$(VTKVERSION) \
+	-lvtkGeovisCorePython35D-$(VTKVERSION) \
 	-lvtkIOAMR-$(VTKVERSION) \
-	-lvtkIOAMRPython27D-$(VTKVERSION) \
-	-lvtkIOCore-$(VTKVERSION) \
-	-lvtkIOCorePython27D-$(VTKVERSION) \
+	-lvtkIOAMRPython35D-$(VTKVERSION) \
+        -lvtkIOCore-$(VTKVERSION) \
+	-lvtkIOCorePython35D-$(VTKVERSION) \
 	-lvtkIOEnSight-$(VTKVERSION) \
-	-lvtkIOEnSightPython27D-$(VTKVERSION) \
+	-lvtkIOEnSightPython35D-$(VTKVERSION) \
 	-lvtkIOExodus-$(VTKVERSION) \
-	-lvtkIOExodusPython27D-$(VTKVERSION) \
+	-lvtkIOExodusPython35D-$(VTKVERSION) \
 	-lvtkIOExport-$(VTKVERSION) \
-	-lvtkIOExportPython27D-$(VTKVERSION) \
+	-lvtkIOExportPython35D-$(VTKVERSION) \
 	-lvtkIOGeometry-$(VTKVERSION) \
-	-lvtkIOGeometryPython27D-$(VTKVERSION) \
+	-lvtkIOGeometryPython35D-$(VTKVERSION) \
 	-lvtkIOImage-$(VTKVERSION) \
-	-lvtkIOImagePython27D-$(VTKVERSION) \
+	-lvtkIOImagePython35D-$(VTKVERSION) \
 	-lvtkIOImport-$(VTKVERSION) \
-	-lvtkIOImportPython27D-$(VTKVERSION) \
+	-lvtkIOImportPython35D-$(VTKVERSION) \
 	-lvtkIOInfovis-$(VTKVERSION) \
-	-lvtkIOInfovisPython27D-$(VTKVERSION) \
+	-lvtkIOInfovisPython35D-$(VTKVERSION) \
 	-lvtkIOLSDyna-$(VTKVERSION) \
-	-lvtkIOLSDynaPython27D-$(VTKVERSION) \
+	-lvtkIOLSDynaPython35D-$(VTKVERSION) \
 	-lvtkIOLegacy-$(VTKVERSION) \
-	-lvtkIOLegacyPython27D-$(VTKVERSION) \
+	-lvtkIOLegacyPython35D-$(VTKVERSION) \
 	-lvtkIOMINC-$(VTKVERSION) \
-	-lvtkIOMINCPython27D-$(VTKVERSION) \
+	-lvtkIOMINCPython35D-$(VTKVERSION) \
 	-lvtkIOMovie-$(VTKVERSION) \
-	-lvtkIOMoviePython27D-$(VTKVERSION) \
+	-lvtkIOMoviePython35D-$(VTKVERSION) \
 	-lvtkIONetCDF-$(VTKVERSION) \
-	-lvtkIONetCDFPython27D-$(VTKVERSION) \
+	-lvtkIONetCDFPython35D-$(VTKVERSION) \
 	-lvtkIOPLY-$(VTKVERSION) \
-	-lvtkIOPLYPython27D-$(VTKVERSION) \
+	-lvtkIOPLYPython35D-$(VTKVERSION) \
 	-lvtkIOParallel-$(VTKVERSION) \
-	-lvtkIOParallelPython27D-$(VTKVERSION) \
+	-lvtkIOParallelPython35D-$(VTKVERSION) \
 	-lvtkIOParallelXML-$(VTKVERSION) \
-	-lvtkIOParallelXMLPython27D-$(VTKVERSION) \
+	-lvtkIOParallelXMLPython35D-$(VTKVERSION) \
 	-lvtkIOSQL-$(VTKVERSION) \
-	-lvtkIOSQLPython27D-$(VTKVERSION) \
+	-lvtkIOSQLPython35D-$(VTKVERSION) \
 	-lvtkIOVideo-$(VTKVERSION) \
-	-lvtkIOVideoPython27D-$(VTKVERSION) \
+	-lvtkIOVideoPython35D-$(VTKVERSION) \
 	-lvtkIOXML-$(VTKVERSION) \
 	-lvtkIOXMLParser-$(VTKVERSION) \
-	-lvtkIOXMLParserPython27D-$(VTKVERSION) \
-	-lvtkIOXMLPython27D-$(VTKVERSION) \
+	-lvtkIOXMLParserPython35D-$(VTKVERSION) \
+	-lvtkIOXMLPython35D-$(VTKVERSION) \
 	-lvtkImagingColor-$(VTKVERSION) \
-	-lvtkImagingColorPython27D-$(VTKVERSION) \
+	-lvtkImagingColorPython35D-$(VTKVERSION) \
 	-lvtkImagingCore-$(VTKVERSION) \
-	-lvtkImagingCorePython27D-$(VTKVERSION) \
+	-lvtkImagingCorePython35D-$(VTKVERSION) \
 	-lvtkImagingFourier-$(VTKVERSION) \
-	-lvtkImagingFourierPython27D-$(VTKVERSION) \
+	-lvtkImagingFourierPython35D-$(VTKVERSION) \
 	-lvtkImagingGeneral-$(VTKVERSION) \
-	-lvtkImagingGeneralPython27D-$(VTKVERSION) \
+	-lvtkImagingGeneralPython35D-$(VTKVERSION) \
 	-lvtkImagingHybrid-$(VTKVERSION) \
-	-lvtkImagingHybridPython27D-$(VTKVERSION) \
+	-lvtkImagingHybridPython35D-$(VTKVERSION) \
 	-lvtkImagingMath-$(VTKVERSION) \
-	-lvtkImagingMathPython27D-$(VTKVERSION) \
+	-lvtkImagingMathPython35D-$(VTKVERSION) \
 	-lvtkImagingMorphological-$(VTKVERSION) \
-	-lvtkImagingMorphologicalPython27D-$(VTKVERSION) \
+	-lvtkImagingMorphologicalPython35D-$(VTKVERSION) \
 	-lvtkImagingSources-$(VTKVERSION) \
-	-lvtkImagingSourcesPython27D-$(VTKVERSION) \
+	-lvtkImagingSourcesPython35D-$(VTKVERSION) \
 	-lvtkImagingStatistics-$(VTKVERSION) \
-	-lvtkImagingStatisticsPython27D-$(VTKVERSION) \
+	-lvtkImagingStatisticsPython35D-$(VTKVERSION) \
 	-lvtkImagingStencil-$(VTKVERSION) \
-	-lvtkImagingStencilPython27D-$(VTKVERSION) \
+	-lvtkImagingStencilPython35D-$(VTKVERSION) \
 	-lvtkInfovisCore-$(VTKVERSION) \
-	-lvtkInfovisCorePython27D-$(VTKVERSION) \
+	-lvtkInfovisCorePython35D-$(VTKVERSION) \
 	-lvtkInfovisLayout-$(VTKVERSION) \
-	-lvtkInfovisLayoutPython27D-$(VTKVERSION) \
+	-lvtkInfovisLayoutPython35D-$(VTKVERSION) \
 	-lvtkInteractionImage-$(VTKVERSION) \
-	-lvtkInteractionImagePython27D-$(VTKVERSION) \
+	-lvtkInteractionImagePython35D-$(VTKVERSION) \
 	-lvtkInteractionStyle-$(VTKVERSION) \
-	-lvtkInteractionStylePython27D-$(VTKVERSION) \
+	-lvtkInteractionStylePython35D-$(VTKVERSION) \
 	-lvtkInteractionWidgets-$(VTKVERSION) \
-	-lvtkInteractionWidgetsPython27D-$(VTKVERSION) \
+	-lvtkInteractionWidgetsPython35D-$(VTKVERSION) \
 	-lvtkNetCDF-$(VTKVERSION) \
-	-lvtkNetCDF_cxx-$(VTKVERSION) \
 	-lvtkParallelCore-$(VTKVERSION) \
-	-lvtkParallelCorePython27D-$(VTKVERSION) \
+	-lvtkParallelCorePython35D-$(VTKVERSION) \
 	-lvtkRenderingAnnotation-$(VTKVERSION) \
-	-lvtkRenderingAnnotationPython27D-$(VTKVERSION) \
+	-lvtkRenderingAnnotationPython35D-$(VTKVERSION) \
 	-lvtkRenderingContext2D-$(VTKVERSION) \
-	-lvtkRenderingContext2DPython27D-$(VTKVERSION) \
+	-lvtkRenderingContext2DPython35D-$(VTKVERSION) \
 	-lvtkRenderingContextOpenGL2-$(VTKVERSION) \
-	-lvtkRenderingContextOpenGL2Python27D-$(VTKVERSION) \
+	-lvtkRenderingContextOpenGL2Python35D-$(VTKVERSION) \
 	-lvtkRenderingCore-$(VTKVERSION) \
-	-lvtkRenderingCorePython27D-$(VTKVERSION) \
+	-lvtkRenderingCorePython35D-$(VTKVERSION) \
 	-lvtkRenderingFreeType-$(VTKVERSION) \
-	-lvtkRenderingFreeTypePython27D-$(VTKVERSION) \
+	-lvtkRenderingFreeTypePython35D-$(VTKVERSION) \
 	-lvtkRenderingImage-$(VTKVERSION) \
-	-lvtkRenderingImagePython27D-$(VTKVERSION) \
+	-lvtkRenderingImagePython35D-$(VTKVERSION) \
 	-lvtkRenderingLOD-$(VTKVERSION) \
-	-lvtkRenderingLODPython27D-$(VTKVERSION) \
+	-lvtkRenderingLODPython35D-$(VTKVERSION) \
 	-lvtkRenderingLabel-$(VTKVERSION) \
-	-lvtkRenderingLabelPython27D-$(VTKVERSION) \
+	-lvtkRenderingLabelPython35D-$(VTKVERSION) \
 	-lvtkRenderingOpenGL2-$(VTKVERSION) \
-	-lvtkRenderingOpenGL2Python27D-$(VTKVERSION) \
+	-lvtkRenderingOpenGL2Python35D-$(VTKVERSION) \
 	-lvtkRenderingVolume-$(VTKVERSION) \
 	-lvtkRenderingVolumeOpenGL2-$(VTKVERSION) \
-	-lvtkRenderingVolumeOpenGL2Python27D-$(VTKVERSION) \
-	-lvtkRenderingVolumePython27D-$(VTKVERSION) \
+	-lvtkRenderingVolumeOpenGL2Python35D-$(VTKVERSION) \
+	-lvtkRenderingVolumePython35D-$(VTKVERSION) \
 	-lvtkViewsContext2D-$(VTKVERSION) \
-	-lvtkViewsContext2DPython27D-$(VTKVERSION) \
+	-lvtkViewsContext2DPython35D-$(VTKVERSION) \
 	-lvtkViewsCore-$(VTKVERSION) \
-	-lvtkViewsCorePython27D-$(VTKVERSION) \
+	-lvtkViewsCorePython35D-$(VTKVERSION) \
 	-lvtkViewsInfovis-$(VTKVERSION) \
-	-lvtkViewsInfovisPython27D-$(VTKVERSION) \
-	-lvtkWrappingPython27Core-$(VTKVERSION) \
+	-lvtkViewsInfovisPython35D-$(VTKVERSION) \
+	-lvtkWrappingPython35Core-$(VTKVERSION) \
 	-lvtkalglib-$(VTKVERSION) \
 	-lvtkexoIIc-$(VTKVERSION) \
 	-lvtkfreetype-$(VTKVERSION) \
@@ -212,4 +211,7 @@ LIBS= -lstdc++ \
 	-lvtkproj4-$(VTKVERSION) \
 	-lvtksqlite-$(VTKVERSION) \
 	-lvtksys-$(VTKVERSION) \
-	-lvtkverdict-$(VTKVERSION)
+	-lvtkverdict-$(VTKVERSION) \
+        -lvtkexpat-$(VTKVERSION) \
+        -lvtkzlib-$(VTKVERSION) \
+        -lvtklz4-$(VTKVERSION)
