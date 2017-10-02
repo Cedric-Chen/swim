@@ -35,7 +35,7 @@ public:
         vector<double> velAngle,
         //output
 		Layer<sizeX,sizeY,1>& charFunc, 
-        Layer<sizeX,sizeY,1>& deltaFunc,
+                Layer<sizeX,sizeY,1>& deltaFunc,
 		Layer<sizeX,sizeY,2>& velBeam
         );
 

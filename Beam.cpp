@@ -289,10 +289,10 @@ void Beam<sizeX,sizeY>::update_velBeam(){
 			xx = ((double)ix+0.5)*H;
 			yy = ((double)iy+0.5)*H;
 
-			if(isBetweenVerticalLine(xx,yy,p1,p2)){
+		if(isBetweenVerticalLine(xx,yy,p1,p2)){
 				//distance with the line pass p1 and p2
 				dist=getDistance(xx,yy,p1,p2);		
-                if(dist<width/2+epsilon){
+                    if(dist<width/2+epsilon){
                     // square of distance between (xx,yy) and p1
                     double dist_hyp_square = pow(xx-p1[0],2) + pow(yy-p1[1],2);
                     // distance between foot point of (xx,yy) on p1-p2 and p1
