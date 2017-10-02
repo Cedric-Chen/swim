@@ -31,12 +31,12 @@ public:
         //input
         vector<double> locHead,
         vector<double> velHead,
-		vector<double> angle,
+	vector<double> angle,
         vector<double> velAngle,
         //output
-		Layer<sizeX,sizeY,1>& charFunc, 
-                Layer<sizeX,sizeY,1>& deltaFunc,
-		Layer<sizeX,sizeY,2>& velBeam
+	Layer<sizeX,sizeY,1>& charFunc, 
+        Layer<sizeX,sizeY,1>& deltaFunc,
+	Layer<sizeX,sizeY,2>& velBeam
         );
 
     void update_pressure(
