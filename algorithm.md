@@ -79,7 +79,7 @@ member variable
 + output
     + charFunc
     + velBeam
-    + newangle, newvelangle
+    + newangle, newvelangle, newT
 
 member function
 ---------------

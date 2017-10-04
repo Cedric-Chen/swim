@@ -35,7 +35,7 @@ private:
     vector<double> * pNewT;
    
     double ComputeF(const vector<double> & estimatedVelAngle);
-    double ComputeG(const vector<double> & estimatedT)
+    double ComputeG(const vector<double> & estimatedT);
     void Broyden(
         double (*Func)(vector<double> &)
         const vector<double> &estimated,

@@ -2,8 +2,8 @@ CC=/usr/bin/gcc
 
 CPPSETTINGS = -std=c++11
 
-CCFLAGS= -O3 -fopenmp -fstrict-aliasing -fdiagnostics-show-option -Wall -Wno-reorder 
-LDFLAGS= -O3
+CCFLAGS= -O3 -fopenmp -fstrict-aliasing -fdiagnostics-show-option -Wall -Wno-reorder -llapack -lblas -larmadillo
+LDFLAGS= -O3 -llapack -lblas -larmadillo
 
 VTKVERSION=8.1
 VTK_INC_DIR = /usr/include/vtk-8.1
@@ -14,6 +14,15 @@ FFTW_LIB_DIR = /usr/lib/x86-64-linux-gnu/
 
 TBB_INC_DIR = /usr/include/tbb/
 TBB_LIB_DIR = /usr/lib/intel64/gcc4.7/
+
+ARMA_INC_DIR = /usr/include/
+ARMA_LIB_DIR = /usr/lib/
+
+LAPACK_INC_DIR = /usr/include/
+LAPACK_LIB_DIR = /usr/lib/lapack
+
+BLAS_INC_DIR = /usr/include/
+BLAS_LIB_DIR = /usr/lib/libblas
 
 INCLUDES = -I${TBB_INC_DIR} -I${FFTW_INC_DIR} -I${VTK_INC_DIR}
 
@@ -214,4 +223,6 @@ LIBS= -lstdc++ \
 	-lvtkverdict-$(VTKVERSION) \
         -lvtkexpat-$(VTKVERSION) \
         -lvtkzlib-$(VTKVERSION) \
-        -lvtklz4-$(VTKVERSION)
+        -lvtklz4-$(VTKVERSION) \
+	-L$(FFTW_LIB_DIR) \
+        -lmpxwrappers
