@@ -12,26 +12,6 @@ void testBeam();
 //void testCP();
 //void testCVF();
 
-const int grid_x = 1000;
-const int grid_y = 100;
-double width = 0.02;
-double length = 0.5;
-double epsilon = 0.002;
-int numofElem = 51;
-vector<double> locHead{0,0.05};
-vector<double> velHead{0,0};
-
-Layer<grid_x,grid_y,1> pressure = Layer<grid_x,grid_y,1>{};
-vector<double> oldAngle = vector<double>(numofElem);
-vector<double> oldVelAngle = vector<double>(numofElem);
-vector<double> currAngle = vector<double>(numofElem);
-vector<double> currVelAngle = vector<double>(numofElem);
-vector<double> newAngle = vector<double>(numofElem);
-vector<double> newVelAngle = vector<double>(numofElem);
-vector<double> currT = vector<double>(numofElem);
-vector<double> newT = vector<double>(numofElem);
-Layer<grid_x,grid_y,2> velBeam = Layer<grid_x,grid_y,2>{};
-Layer<grid_x,grid_y,1> charFunc = Layer<grid_x,grid_y,1>{};
 
 int main()
 {
@@ -41,11 +21,47 @@ int main()
 }
 
 void testBeam(){
+    const int grid_x = 1000;
+    const int grid_y = 100;
+    double width = 0.02;
+    double length = 0.5;
+    double epsilon = 0.002;
+    int numofElem = 5;
+    vector<double> locHead{0,0.05};
+    vector<double> velHead{0,0};
+
+    vector<double> oldAngle{0.2, 0.2, 0.2, 0.2, 0.2};
+    vector<double> oldVelAngle = vector<double>(numofElem);
+    vector<double> currAngle{0.2, 0.2, 0.2, 0.2, 0.2};
+    vector<double> currVelAngle = vector<double>(numofElem);
+    vector<double> newAngle = vector<double>(numofElem);
+    vector<double> newVelAngle = vector<double>(numofElem);
+    vector<double> currT = vector<double>(numofElem);
+    vector<double> newT = vector<double>(numofElem);
+    Layer<grid_x,grid_y,2> velBeam = Layer<grid_x,grid_y,2>{};
+    Layer<grid_x,grid_y,1> charFunc = Layer<grid_x,grid_y,1>{};
+    double oldDt = 1;
+    double currDt = 1;
+
+    Layer<grid_x,grid_y,1> pressure = Layer<grid_x,grid_y,1>{};
+    for(int i=0; i<grid_x; i++){
+        for(int j=0; j<grid_y; j++){
+            pressure(i,j,1) = j;
+        }
+    }
+
     Beam<grid_x, grid_y>beam = Beam<grid_x, grid_y>
         {width,length,locHead,velHead,epsilon,numofElem};
-    beam.advance(pressure,oldAngle,oldVelAngle,currAngle,
+    beam.advance(oldDt,currDt,pressure,oldAngle,oldVelAngle,currAngle,
         currVelAngle,newAngle,newVelAngle,currT,newT,
         velBeam,charFunc);
+    
+    for(auto i = newAngle.begin(); i!= newAngle.end(); i++)
+        cout <<*i;
+    cout <<endl;
+    for(auto i = newVelAngle.begin(); i!= newVelAngle.end(); i++)
+        cout <<*i <<", ";
+    cout <<endl;
 }
 
 //void testBeam(){

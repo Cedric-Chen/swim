@@ -33,6 +33,17 @@ struct ALIGN_ATTRIBUTE Layer
 		return data[dim][iy][ix];
 	}
 
+	inline Real operator ()(int ix = 0, int iy=0, int dim = 0) const
+	{
+#ifndef NDEBUG
+		assert(ix>=0 && ix<sizeX);
+		assert(iy>=0 && iy<sizeY);
+#endif
+		
+		return data[dim][iy][ix];
+	}
+
+
 	inline Real read(int ix = 0, int iy=0, int dim = 0) const
 	{
 #ifndef NDEBUG

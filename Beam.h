@@ -15,6 +15,8 @@ public:
     ~Beam() {}
 
     void advance(
+        double oldDt,
+        double currDt,
         const Layer<sizeX,sizeY,1> & pressure,
         const vector<double> & oldAngle,
         const vector<double> & oldVelAngle,
@@ -32,8 +34,11 @@ private:
     // geometry
     const double mWidth; //width of the beam
     const double mLength; //length of the beam
-    const vector<double> & mLocHead = vector<double>(2); //location of head
-    const vector<double> & mVelHead = vector<double>(2); //veloctiy of head
+    const vector<double> mLocHead; //location of head
+    const vector<double> mVelHead; //veloctiy of head
+    // physical properties of beam
+    double mu;
+    double eta;
     // computational setting
     const double mEpsilon; //thickness of buffer area near interface
     const int mNumofElem;  //number of elements
@@ -47,6 +52,8 @@ private:
     const vector<double> * pCurrVelAngle; 
     const vector<double> * pCurrT; 
     const Layer<sizeX, sizeY, 1> * pPressure;
+    double oldDt;
+    double currDt;
 
     // internal variable
     //do not include location and of velocity of head.
@@ -56,6 +63,13 @@ private:
     vector<double> mVelAngle = vector<double>(mNumofElem);
     Layer<sizeX, sizeY, 1> mDeltaFunc;
     vector<double> mPressureOnBody;
+    // internal shared calculation variable
+    arma::vec dw1ds;
+    arma::vec dw1ds_2;
+    arma::vec dw1ds_3;
+    arma::vec w2;
+    arma::mat D;
+    arma::mat I_adddown;
 
     //output
     vector<double> * pNewAngle;
@@ -72,7 +86,9 @@ private:
     void broyden(
         char choose_function,
         const vector<double> &estimated,
-        vector<double> &result
+        vector<double>::iterator result_begin,
+        vector<double>::iterator result_end
+//        vector<double> &result
     );
 
     //update helper function

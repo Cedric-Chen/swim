@@ -2,6 +2,7 @@
 
 //Environment
 //#include "Environment.h"
+#include "LayerToVTK.h"
 
 #include <vector>
 #include <algorithm>
@@ -22,6 +23,9 @@ Beam<sizeX, sizeY>::Beam(double width,double length,
     mEpsilon{epsilon},
     mNumofElem{numofElem},
     mLengthofElem{mLength/mNumofElem},
+    
+    mu{1.0},
+    eta{1.0},
 
     pOldAngle{NULL},
     pOldVelAngle{NULL},
@@ -29,13 +33,22 @@ Beam<sizeX, sizeY>::Beam(double width,double length,
     pCurrVelAngle{NULL},
     pNewAngle{NULL},
     pNewVelAngle{NULL},
+    oldDt{},
+    currDt{},
 
     pCurrT{NULL},
     pNewT{NULL},
     pPressure{NULL},
 
     pCharFunc{NULL},
-    pVelBeam{NULL} 
+    pVelBeam{NULL},
+
+    dw1ds{arma::vec{}},
+    dw1ds_2{arma::vec{}},
+    dw1ds_3{arma::vec{}},
+    w2{arma::vec{}},
+    D{arma::mat{}},
+    I_adddown{arma::mat{}}
 {
     mLoc = matrix(mNumofElem+1, vector<double>(2)); 
     mVel = matrix(mNumofElem+1, vector<double>(2));
@@ -43,10 +56,13 @@ Beam<sizeX, sizeY>::Beam(double width,double length,
     mVelAngle = vector<double>(mNumofElem);
     mDeltaFunc = Layer<sizeX, sizeY, 1>{};
     mPressureOnBody = vector<double>(mNumofElem);
+    cout <<"constructor: " <<mLocHead[0]<<", " <<mLocHead[1]<<endl;
 }
 
 template<int sizeX,int sizeY>
 void Beam<sizeX,sizeY>::advance(
+    double oldDt,
+    double currDt,
     const Layer<sizeX,sizeY,1> & pressure,
     const vector<double> & oldAngle,
     const vector<double> & oldVelAngle,
@@ -60,6 +76,9 @@ void Beam<sizeX,sizeY>::advance(
     Layer<sizeX,sizeY,1> & charFunc
     )
 {
+
+    this->oldDt = oldDt;
+    this->currDt = currDt;
     pOldAngle = &oldAngle;
     pOldVelAngle = &oldVelAngle;
     pCurrAngle = &currAngle;
@@ -73,30 +92,143 @@ void Beam<sizeX,sizeY>::advance(
 
     pCharFunc = &charFunc;
     pVelBeam = &velBeam;
-    
-    vector<double> est{0,0};
-    vector<double> res{0,0};
-    broyden('T',est,res);
-    cout <<"result: " <<res[0] <<", " <<res[1] <<endl; 
-//    broyden('F', *pCurrVelAngle, *pNewVelAngle);
-//    *pNewAngle = -----;
+
+    vector<double> estimatedVelAngle
+        {(*pCurrVelAngle).begin()+1,(*pCurrVelAngle).end()};
+    broyden(
+        'F', 
+        estimatedVelAngle,
+        (*pNewVelAngle).begin()+1,
+        (*pNewVelAngle).end()
+    );
+
+    // from newCurrVelAngle to newCurrAngle
+    const arma::vec w2{
+         vector<double>{
+            (*pNewAngle).begin()+1,
+            (*pNewAngle).end()
+            }
+        };
+    const arma::vec w1_0{
+        vector<double>{
+            (*pCurrAngle).begin()+1,
+            (*pCurrAngle).end()
+            }
+        };
+    arma::vec w1 = w1_0+ currDt*w2;
+    w1.insert_rows(0,1,0);
+    (*pNewAngle) = arma::conv_to<vector<double>>::from(w1);
 }
 
 template<int sizeX,int sizeY>
 arma::vec Beam<sizeX,sizeY>::compute_F(const arma::vec & estimatedVelAngle){
-    return arma::vec{};
+    auto dim = estimatedVelAngle.size()+1;
+    
+    // w1 - estiamted angle, (dim-1)*1
+    // w2 - estimated velAngle, (dim-1)*1
+    w2 = estimatedVelAngle;
+    const arma::vec w2_0{
+        vector<double>{
+            (*pCurrVelAngle).begin()+1,
+            (*pCurrVelAngle).end()
+            }
+        };
+    const arma::vec w2_minus1{
+        vector<double>{
+            (*pOldVelAngle).begin()+1,
+            (*pOldVelAngle).end()
+            }
+        };
+    const arma::vec w1_0{
+        vector<double>{
+            (*pCurrAngle).begin()+1,
+            (*pCurrAngle).end()
+            }
+        };
+    const arma::vec w1 = w1_0+ currDt*w2;
+
+    // solve pressure at estimated geometry
+    update(
+        arma::conv_to<vector<double>>::from(w1),
+        arma::conv_to<vector<double>>::from(w2)
+    );
+    const arma::vec pressureOnBody{mPressureOnBody};
+
+    // build transforamtion and derivative matrix
+    arma::mat I{dim, dim, arma::fill::eye};
+    arma::mat I_addtop = I.cols(1,dim-1);
+    I_adddown = I.cols(0,dim-2);
+    const double H = (double)(*pPressure).getH0(); 
+    D = -arma::diagmat(arma::vec{dim,1,arma::fill::ones}) +
+        arma::diagmat(arma::vec{dim-1,1,arma::fill::ones}, 1);
+    D = D.rows(0,dim-2) / H;
+
+    dw1ds = (I_adddown * D) * (I_addtop * w1);
+    dw1ds_2 = (I_adddown * D) * dw1ds;
+    dw1ds_3 = D * dw1ds_2;
+    dw1ds_3.insert_rows(0,1,0);
+
+    // T - longitual force, dim * 1
+    broyden(
+        'G',
+        vector<double>{(*pCurrT).begin(),(*pCurrT).end()-1},
+        (*pNewT).begin(),
+        (*pNewT).end()
+    );
+    const arma::vec T{(*pNewT)};
+
+    dw1ds_3[0] = T[0] * dw1ds[0] - pressureOnBody[0];
+    arma::vec dw1ds_4 = D * dw1ds_3; // (dim-1)*1
+    arma::vec dpds = D * pressureOnBody; // (dim-1)*1
+    arma::vec dTds = D * T; // (dim-1)*1
+
+    arma::vec dw2dt = - dpds - eta*dw1ds_4 -
+        (T.rows(1,dim-1) + eta * dw1ds.rows(1,dim-1) % dw1ds.rows(1,dim-1)) % 
+        dw1ds_2.rows(1,dim-1) +
+        2 * dTds % dw1ds.rows(1,dim-1);
+    dw2dt /= mu;
+
+    double xi = currDt / oldDt;
+    arma::vec F = -w2 + pow(1+xi,2)/(1+2*xi) * w2_0 - 
+        pow(xi,2)/(1+2*xi) * w2_minus1 + 
+        (1+xi)/(1+2*xi) * currDt * dw2dt;
+    F.print();
+    return F;
 }
 
 template<int sizeX,int sizeY>
 arma::vec Beam<sizeX,sizeY>::compute_G(const arma::vec & estimatedT){
-    return arma::vec{};
+    auto dim = estimatedT.size()+1;
+
+    const arma::vec pressureOnBody{mPressureOnBody};
+    pressureOnBody.print();
+
+    const arma::vec & Tx = estimatedT;
+    dw1ds_3[0] = Tx[0] * dw1ds[0] - pressureOnBody[0];
+
+    arma::vec dTds{dim,1,arma::fill::ones};
+    dTds.rows(1,dim-1) = D * I_adddown * Tx;
+    dTds[0] = - dw1ds[0] * dw1ds_2[0];
+    arma::vec dTds_2{D * dTds};
+    
+    arma::vec G = dTds_2 - 
+        Tx % dw1ds.rows(0,dim-2) % dw1ds.rows(0,dim-2) +
+        pressureOnBody.rows(0,dim-2) % dw1ds.rows(0,dim-2) +
+        2*eta*dw1ds.rows(0,dim-2) % dw1ds_3.rows(0,dim-2) +
+        eta * dw1ds_2.rows(0,dim-2) % dw1ds_2.rows(0,dim-2) +
+        mu * w2 % w2;
+    G.print();
+    exit(0);
+    return G;
 }
 
 template<int sizeX,int sizeY>
 arma::vec Beam<sizeX,sizeY>::compute_test(const arma::vec & estimated){
     arma::mat res{arma::size(estimated),arma::fill::zeros};
-    res[0] = estimated[0] + estimated[1] - 3;
-    res[1] = estimated[0]^2 + estimated[1]^2 - 9;
+    res[0] = 2*estimated[0] + 2*estimated[1] - estimated[2] -1;
+    res[1] = 2*estimated[0] - 2*estimated[1] + 4*estimated[2] +2;
+    res[2] = -estimated[0] + 0.5*estimated[1] - estimated[2];
+    cout <<res[2]<<endl;
     return res;
 }
 
@@ -122,30 +254,55 @@ template<int sizeX,int sizeY>
 void Beam<sizeX,sizeY>::broyden(
     char choose_function,
     const vector<double> &estimated,
-    vector<double> &result
+    vector<double>::iterator result_start,
+    vector<double>::iterator result_end
+//    vector<double> &result
 ){
     const double eps1 = 1e-8;
     const double eps2 = 1e-8;
     int dim = estimated.size();
     arma::vec x0{estimated};
+    cout <<"broyden: "<<choose_function<<endl;
     arma::vec y0{compute(choose_function, x0)};
     
     arma::mat S(dim,dim,arma::fill::eye);
-    arma::mat err(arma::size(x0),arma::fill::ones);
+    arma::vec err(arma::size(x0),arma::fill::ones);
 
     double ferr{};
     arma::vec x{};
     arma::vec y{};
-    while(err >0){
+
+    x0.print();
+    y0.print();
+
+    bool state = true;
+    while(state){
         arma::vec d = -solve(S, y0);
         x = x0 + d;
         y = compute(choose_function,x);
-        S = S + ((y-y0) - S*d) *d.t() / (d.t()*d);
-        double temp = sqrt( (x-x0).t() * (x-x0));
+        S = S + ((y-y0) - S*d) *d.t() / arma::as_scalar((d.t()*d));
+        double temp = arma::as_scalar(sqrt( (x-x0).t() * (x-x0)));
         err = temp - eps1 * (1 + abs(x));
-        ferr = sqrt(y.t() * y);
+        ferr = sqrt(arma::as_scalar(y.t() * y));
+
+//        d.print();
+//        S.print();
+//        err.print();
+//        cout <<ferr<<endl;
+        x.print();
+        y.print();
+
         x0 = x;
         y0 = y;
+
+        state = true;
+        for(arma::vec::const_row_iterator i = err.begin();
+            i != err.end(); i++){
+            if((*i)<=0){
+                state = false;
+                break;
+            }
+        }
     }
 
     if(ferr >= eps2){
@@ -153,8 +310,10 @@ void Beam<sizeX,sizeY>::broyden(
         exit(0);
     }
 
-    for(int i=0;i<dim;i++){
-        result[i] = x[i];
+    int j{0};
+    for(auto i=result_start; i != result_end; i++){
+        *i = x[j];
+        j++;
     }
 }
 
@@ -166,15 +325,6 @@ void Beam<sizeX,sizeY>::update(
 
 	vector<double> mAngle = angle;
 	vector<double> mVelAngle = velAngle;
-//    //debug
-//    cout <<"angle: ";
-//    for(auto i = mAngle.begin(); i != mAngle.end(); i++)
-//        cout <<" " <<*i;
-//    cout <<"\n";
-//    cout <<"velAngale: ";
-//    for(auto i = mVelAngle.begin(); i != mVelAngle.end(); i++)
-//        cout <<" " <<*i;
-//    cout <<"\n";
 
 	update_loc();
 	update_vel();
@@ -182,11 +332,15 @@ void Beam<sizeX,sizeY>::update(
 	update_deltaFunc();
 	update_velBeam();
         update_pressure();
+        dumpLayer2VTK(0,"charFunc",*pCharFunc);
+        dumpLayer2VTK(0,"deltaFunc",mDeltaFunc);
+        dumpLayer2VTK(0,"velBeam",*pVelBeam);
+        dumpLayer2VTK(0,"pressure",*pPressure);
 }
 
 template<int sizeX,int sizeY>
 void Beam<sizeX,sizeY>::update_pressure(){
-    const Layer<sizeX,sizeY,1> & deltaFunc = mDeltaFunc;
+    Layer<sizeX,sizeY,1> & deltaFunc = mDeltaFunc;
     const Layer<sizeX,sizeY,1> & pressure = *pPressure;
     vector<double> & pressureOnBody = mPressureOnBody;
 
@@ -241,21 +395,22 @@ void Beam<sizeX,sizeY>::update_pressure(){
 
 template<int sizeX,int sizeY>
 void Beam<sizeX,sizeY>::update_loc(){
+    cout <<"locHead: "<<mLocHead[0]<<", " <<mLocHead[1]<<endl;
     mLoc[0] = mLocHead;
     for(int i=0;i<mNumofElem;i++){
         mLoc[i+1][0] = mLoc[i][0] + mLengthofElem*cos(mAngle[i]);
         mLoc[i+1][1] = mLoc[i][1] + mLengthofElem*sin(mAngle[i]);
     }
 
-//    //debug
-//    cout <<"location: ";
-//    for(auto i = mLoc.begin(); i != mLoc.end(); i++){
-//        cout <<" (";
-//        for(auto j = (*i).begin(); j != (*i).end(); j++)
-//            cout <<" " <<*j;
-//        cout <<")";
-//    }
-//    cout <<"\n";
+    //debug
+    cout <<"location: ";
+    for(auto i = mLoc.begin(); i != mLoc.end(); i++){
+        cout <<" (";
+        for(auto j = (*i).begin(); j != (*i).end(); j++)
+            cout <<" " <<*j;
+        cout <<")";
+    }
+    cout <<"\n";
 }
 
 template<int sizeX,int sizeY>
